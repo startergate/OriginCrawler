@@ -4,6 +4,12 @@ class OriginCrawler {
   async init(id, pw) {
     this.browser = await puppeteer.launch({headless: false});
     this.page = await this.browser.newPage();
+    await this.page.goto("https://www.origin.com/kor/en-us/store");
+    await this.page.waitForSelector('#shell > section > div > nav > div > div.origin-navigation-top.origin-telemetry-navigation-top > div.l-origin-hamburger', {
+      visible: true,
+    });
+    console.log("loaded");
+    await this.page.click('#shell > section > div > nav > div > div.origin-navigation-top.origin-telemetry-navigation-top > div.l-origin-hamburger')
   }
 
   getOwnedGame() {
