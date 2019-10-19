@@ -1,3 +1,3 @@
 const origin = require("./");
 
-origin.init(null, null);
+origin.init('startergate@naver.com', null);
