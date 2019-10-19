@@ -1,3 +1,4 @@
 const origin = require("./");
+const setting = require('./test.setting');
 
-origin.init('startergate@naver.com', null);
+origin.init(setting.id, setting.pw);
