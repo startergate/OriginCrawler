@@ -1,7 +1,13 @@
 const puppeteer = require("puppeteer");
+const readline = require("readline");
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
 
 class OriginCrawler {
-  async init(id, pw) {
+  async init(id, pw, env="non-console") {
     this.browser = await puppeteer.launch({headless: false});
     this.page = await this.browser.newPage();
     await this.page.goto("https://www.origin.com/kor/en-us/store");
@@ -21,6 +27,19 @@ class OriginCrawler {
     await popup.type('#email', id);
     await popup.type('#password', pw);
     await popup.click('#logInBtn');
+    await popup.reload();
+
+    console.log(await popup.title());
+    if (await popup.title() === "Login Verification") {
+      if (env === "console") {
+        await popup.click('#btnSendCode');
+        let prom;
+        rl.question(`Enter Login Verification Keyword for ${id}> `, async answer => {
+          await popup.type('#oneTimeCode', answer);
+          prom = await popup.click('#btnSubmit');
+        });
+      }
+    }
   }
 
   getOwnedGame() {
