@@ -9,16 +9,18 @@ class OriginCrawler {
       visible: true,
     });
     await this.page.click('#shell > section > div > nav > div > div.origin-navigation-top.origin-telemetry-navigation-top > div.l-origin-hamburger');
+    const nav = new Promise(res => this.browser.on('targetcreated', res));
     await this.page.click('#shell > section > div > nav > div > div:nth-child(5) > ul > li:nth-child(1) > origin-cta-login > origin-cta-primary > div > a');
-    let pages = await this.browser.pages();
+    let pages = await nav.then(_ => this.browser.pages()); // TODO: 랜덤하게 페이지 이동을 기다리지 못하는 경우가 있음
+    // console.log(pages);
     let popup = pages[pages.length - 1];
-
-    await this.page.waitForSelector('#email', {
+    // console.log(await popup.title());
+    await popup.waitForSelector('#email', {
       visible: true,
     });
-    await popup.click('#email');
     await popup.type('#email', id);
-    await popup.type('#password', id)
+    await popup.type('#password', pw);
+    await popup.click('#logInBtn');
   }
 
   getOwnedGame() {

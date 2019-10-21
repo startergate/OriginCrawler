@@ -181,3 +181,5 @@ typings/
 .idea/modules.xml
 package.json
 yarn.lock
+
+test.setting.js
