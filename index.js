@@ -10,7 +10,7 @@ class OriginCrawler {
   async init(id, pw, env="non-console") {
     this.browser = await puppeteer.launch({headless: false});
     this.page = await this.browser.newPage();
-    await this.page.goto("https://www.origin.com/kor/en-us/store");
+    await this.page.goto("https://www.origin.com/kor/en-us/store"); // TODO: 연결 실패 오류 처리 필요
     await this.page.waitForSelector('#shell > section > div > nav > div > div.origin-navigation-top.origin-telemetry-navigation-top > div.l-origin-hamburger', {
       visible: true,
     });
@@ -34,10 +34,11 @@ class OriginCrawler {
       if (env === "console") {
         await popup.click('#btnSendCode');
         let prom;
-        rl.question(`Enter Login Verification Keyword for ${id}> `, async answer => {
-          await popup.type('#oneTimeCode', answer);
+        for await (const line of rl) {
+          await popup.type('#oneTimeCode', line);
           prom = await popup.click('#btnSubmit');
-        });
+          break;
+        }
       }
     }
   }
